@@ -16,6 +16,9 @@ export class CoreLayout extends React.Component {
       isLoading: true,
       update: 0,
     };
+  }
+
+  componentDidMount() {
     fb.setUpdateFn(this.triggerUpdate);
     fb.updateLoginStatus(() => {
       this.setState({ isLoading: false });
