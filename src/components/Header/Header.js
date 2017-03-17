@@ -6,16 +6,34 @@ export default class Header extends React.Component {
   static propTypes = {};
 
   render () {
+    const { me } = this.props;
     return (
       <div>
         <h1>Facebook Sample App</h1>
-        <IndexLink to='/' activeClassName='route--active'>
-          Home
-        </IndexLink>
-        &nbsp;•&nbsp;
-        <Link to='/friends' activeClassName='active'>
-          Friends
-        </Link>
+        <nav className="navbar navbar-default">
+          <div className="container-fluid">
+            <ul className="nav navbar-nav">
+              <li>
+                <IndexLink to='/' activeClassName='route--active'>
+                  Home
+                </IndexLink>
+              </li>
+              <li>
+                <Link to='/friends' activeClassName='active'>
+                  Friends
+                </Link>
+              </li>
+            </ul>
+            <div className="navbar-header navbar-right">
+              <div className="navbar-brand">
+                <img
+                  src={`https://graph.facebook.com/${me.id}/picture`}
+                />
+                <span>{ me.name }</span>
+              </div>
+            </div>
+          </div>
+        </nav>
       </div>
     )
   }

@@ -14,23 +14,27 @@ export class CoreLayout extends React.Component {
     this.state = {
       loggedIn: false,
       isLoading: true,
+      update: 0,
     };
+    fb.setUpdateFn(this.triggerUpdate);
     fb.updateLoginStatus(() => {
-      this.setState({ loggedIn: fb.isLoggedIn(), isLoading: false });
+      this.setState({ isLoading: false });
     });
   }
 
   login = () => {
-    fb.login(() => {
-      this.setState({ loggedIn: fb.isLoggedIn() });
-    });
+    fb.login();
+  };
+
+  triggerUpdate = () => {
+    this.setState({ update: +new Date });
   };
 
   renderLoggedIn() {
     const { children } = this.props;
     return (
       <div>
-        <Header />
+        <Header me={fb.me} />
         <div className='core-layout__viewport'>
           {children}
         </div>
@@ -50,7 +54,8 @@ export class CoreLayout extends React.Component {
   }
 
   render () {
-    const { loggedIn, isLoading } = this.state;
+    const { isLoading } = this.state;
+    const loggedIn = fb.isLoggedIn();
     return (
       <div className='container text-center'>
         { isLoading && 'Loading...' }

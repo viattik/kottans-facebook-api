@@ -7,6 +7,8 @@ const LOGIN_STATUSES = {
 class Facebook {
   appId = null;
   authResponse = null;
+  me = {};
+  updateFn = () => {};
 
   init({ appId }, cb) {
     this.appId = appId;
@@ -35,6 +37,9 @@ class Facebook {
     js.src = "//connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }
+  setUpdateFn(fn) {
+    this.updateFn = fn;
+  }
 
   isLoggedIn() {
     return !!this.authResponse;
@@ -44,7 +49,9 @@ class Facebook {
       console.log('Current login status is', response);
       if (response.status === LOGIN_STATUSES.CONNECTED) {
         this.authResponse = response.authResponse;
+        this.updateMe();
       }
+      this.updateFn();
       cb();
     });
   }
@@ -53,9 +60,16 @@ class Facebook {
       console.log('User respond:', response);
       if (response.status === LOGIN_STATUSES.CONNECTED) {
         this.authResponse = response.authResponse;
+        this.updateMe();
       }
-      cb();
+      this.updateFn();
     });
+  }
+  updateMe() {
+    FB.api('/me', (response) => {
+      this.me = response;
+      this.updateFn();
+    })
   }
 
 }
