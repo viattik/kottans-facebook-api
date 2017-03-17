@@ -1,14 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import AppContainer from './App';
-import FB from 'utils/fb';
-import conf from 'conf.json'
 import routes from 'routes';
-
-// ========================================================
-// FB
-// ========================================================
-FB.init({ appId: conf.appId });
 
 // ========================================================
 // Render Setup
