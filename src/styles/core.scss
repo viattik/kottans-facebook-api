@@ -19,7 +19,9 @@ body {
 *:after {
   box-sizing: inherit;
 }
+$fb-button-color: #4c69ba;
 
-.fb-button-color {
-  background: #4c69ba;
+.login-button {
+  background: $fb-button-color;
+  color: #fff;
 }

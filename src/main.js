@@ -6,11 +6,6 @@ import conf from 'conf.json'
 import routes from 'routes';
 
 // ========================================================
-// FB
-// ========================================================
-FB.init({ appId: conf.appId });
-
-// ========================================================
 // Render Setup
 // ========================================================
 const MOUNT_NODE = document.getElementById('root');
@@ -53,4 +48,4 @@ if (__DEV__) {
   }
 }
 
-render();
+FB.init({ appId: conf.appId }, render);
