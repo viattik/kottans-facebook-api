@@ -1,14 +1,17 @@
-const LOGIN_STATUSES = {
-  CONNECTED: 'connected',
-  NOT_AUTHORIZED: 'not_authorized',
-  UNKNOWN: 'unknown',
-};
+import {
+  LOGIN_STATUSES,
+  GRANTED_PERMISSION,
+  DECLINED_PERMISSION,
+} from 'constants/facebook';
 
 class Facebook {
   appId = null;
   authResponse = null;
   me = {};
+  permissions = {};
   updateFn = () => {};
+  photos = [];
+  nextPhotos = null;
 
   init({ appId }, cb) {
     this.appId = appId;
@@ -47,31 +50,66 @@ class Facebook {
   updateLoginStatus(cb) {
     FB.getLoginStatus((response) => {
       console.log('Current login status is', response);
-      if (response.status === LOGIN_STATUSES.CONNECTED) {
-        this.authResponse = response.authResponse;
-        this.updateMe();
-      }
-      this.updateFn();
+      this.processLoginResponse(response);
       cb();
     });
   }
-  login(cb) {
+  login(permissions = []) {
+    const isReRequesting = permissions
+      .some((item) => this.permissions[item] === DECLINED_PERMISSION);
     FB.login((response) => {
       console.log('User respond:', response);
-      if (response.status === LOGIN_STATUSES.CONNECTED) {
-        this.authResponse = response.authResponse;
-        this.updateMe();
-      }
-      this.updateFn();
+      this.processLoginResponse(response);
+    }, {
+      scope: permissions.join(','),
+      ...(isReRequesting ? { auth_type: 'rerequest' } : {})
     });
   }
+  processLoginResponse(response) {
+    if (response.status === LOGIN_STATUSES.CONNECTED) {
+      this.authResponse = response.authResponse;
+      this.updateMe();
+      this.updatePermissions();
+    }
+    this.updateFn();
+  }
+
   updateMe() {
     FB.api('/me', (response) => {
       this.me = response;
       this.updateFn();
     })
   }
+  hasPermission(permission) {
+    return this.permissions[permission] === GRANTED_PERMISSION;
+  }
+  updatePermissions() {
+    FB.api('/me/permissions', (response) => {
+      this.permissions = response.data.reduce((acc, item) => ({
+        ...acc,
+        [item.permission]: item.status,
+      }), {});
+      this.updateFn();
+    })
+  }
 
+  fetchPhotos() {
+    FB.api('me/photos?fields=picture,link', (response) => {
+      this.photos = response.data;
+      this.nextPhotos = response.paging.next;
+      this.updateFn();
+    });
+  }
+  fetchNextPhotos() {
+    FB.api(this.nextPhotos, (response) => {
+      this.photos = [
+        ...this.photos,
+        ...response.data,
+      ];
+      this.nextPhotos = response.paging.next;
+      this.updateFn();
+    })
+  }
 }
 
 export default new Facebook;

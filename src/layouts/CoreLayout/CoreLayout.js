@@ -39,7 +39,7 @@ export class CoreLayout extends React.Component {
       <div>
         <Header me={fb.me} />
         <div className='core-layout__viewport'>
-          {children}
+          { React.cloneElement(children, { fb }) }
         </div>
       </div>
     );
@@ -49,7 +49,7 @@ export class CoreLayout extends React.Component {
     return (
       <div>
         <h1>Facebook Sample App</h1>
-        <button className="login-button" onClick={this.login}>
+        <button className="btn login-button" onClick={this.login}>
           Login with Facebook
         </button>
       </div>

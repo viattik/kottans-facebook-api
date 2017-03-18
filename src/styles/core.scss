@@ -24,4 +24,7 @@ $fb-button-color: #4c69ba;
 .login-button {
   background: $fb-button-color;
   color: #fff;
+  &:hover {
+    color: #ddd;
+  }
 }

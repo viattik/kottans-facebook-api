@@ -19,8 +19,8 @@ export default class Header extends React.Component {
                 </IndexLink>
               </li>
               <li>
-                <Link to='/friends' activeClassName='active'>
-                  Friends
+                <Link to='/photos' activeClassName='active'>
+                  Photos
                 </Link>
               </li>
             </ul>
