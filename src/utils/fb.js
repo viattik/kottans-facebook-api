@@ -110,6 +110,22 @@ class Facebook {
       this.updateFn();
     })
   }
+
+  share() {
+    FB.ui({
+      method: 'share',
+      href: 'http://kottans.org',
+      quote: 'Kottans are awesome!',
+    }, (response) => {
+      console.log('Share response', response);
+    });
+  }
+  send() {
+    FB.ui({
+      method: 'send',
+      link: 'http://kottans.org/kottans-calendar/',
+    });
+  }
 }
 
 export default new Facebook;

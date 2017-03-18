@@ -23,6 +23,11 @@ export default class Header extends React.Component {
                   Photos
                 </Link>
               </li>
+              <li>
+                <Link to='/share' activeClassName='active'>
+                  Share
+                </Link>
+              </li>
             </ul>
             <div className="navbar-header navbar-right">
               <div className="navbar-brand">
